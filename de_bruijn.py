@@ -108,7 +108,7 @@ class Graph:
             draw_g.render(file)
             draw_g.render(file)
         else:
-            print('I don\'t understand')
+            print('Check mark!')
         
 
 if __name__ == '__main__':
