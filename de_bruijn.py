@@ -6,8 +6,8 @@ from graphviz import Digraph
 class Vertex: 
 #
 # Класс отвечающий за вершины графа, имеет атрибуты:
-# seq - последовательность; 
-# coverage - покрытие, показывает сколько раз встретился подобный узел
+# seq - последовательность
+# coverage - покрытие
 # in_edges - входящие ребра ( т.е. данная вершина является суффиксом некоторго ребра )
 # out_edges - исходящие ребра ( т.е. данная вершина является префиксом некоторго ребра )
 #
@@ -28,10 +28,10 @@ class Vertex:
 class Edge:
 #
 # Класс отвечающий за ребра графа, имеет атрибуты:
-# seq - последовательность; 
-# coverage - покрытие, показывает сколько раз встретился данное ребро
-# in_edges - входящие ребра ( т.е. данная вершина является суффиксом некоторго ребра )
-# out_edges - исходящие ребра ( т.е. данная вершина является префиксом некоторго ребра )
+# seq - последовательность
+# coverage - покрытие
+# start - начало ребра
+# end - конец ребра
 #
 # Методы класса:
 # increase_coverage - увеличивает покрытие на 1
@@ -75,7 +75,6 @@ class Graph:
             new_edge = Edge(kmer,next_kmer)
             
             new_edge_name = kmer + next_kmer[-1]
-            #self.edges_list[name_edges] = [kmer, next_kmer]
             self.edges_list[new_edge_name] = new_edge
             
             self.vertices[next_kmer].in_edges[kmer]  = [new_edge]
@@ -92,21 +91,24 @@ class Graph:
     
     def vizualize(self,file,mark):
         draw_g = Digraph()
+	# Создает сложный вид графа, сначала передает названия узлов graphviz, а затем ребра и подписывает все
         if mark == 'complex':
             for i in my_graph.vertices:
                 draw_g.node(i,i)
             for j in my_graph.edges_list:
                 e=my_graph.edges_list[j]
                 draw_g.edge(e.start,e.end, label = str(j))
-            draw_g.render(file)
+
+	# Создает сложный вид графа, сначала передает веса узлов graphviz, а затем веса и длины ребер
         elif mark == 'simple':
             for i in my_graph.vertices:
                 draw_g.node(i,str(my_graph.vertices[i].coverage))
             for j in my_graph.edges_list:
                 e=my_graph.edges_list[j]
                 draw_g.edge(e.start,e.end, label = 'Coverage: {}, length: {}'.format(my_graph.edges_list[j].coverage,len(my_graph.edges_list[j].seq)))
-            draw_g.render(file)
-            draw_g.render(file)
+
+	# Отрисовывает полученный граф и сохраняет его в файл
+        draw_g.render(file)
         else:
             print('Check mark!')
         
@@ -123,7 +125,6 @@ if __name__ == '__main__':
         for record in SeqIO.parse(handle, "fasta"):
             read = str(record.seq)
             my_graph.add_read(read)
-#            my_graph.add_read( str(record.reverse_complement().seq) )
 
     my_graph.calc_init_edge_coverage()
     
