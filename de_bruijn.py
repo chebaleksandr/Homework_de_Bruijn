@@ -91,24 +91,22 @@ class Graph:
     
     def vizualize(self,file,mark):
         draw_g = Digraph()
-	# Создает сложный вид графа, сначала передает названия узлов graphviz, а затем ребра и подписывает все
+	# Создает сложный вид графа, сначала передает названия узлов graphviz, а затем ребра и подписывает все, отрисовывает полученный граф и сохраняет его в файл
         if mark == 'complex':
             for i in my_graph.vertices:
                 draw_g.node(i,i)
             for j in my_graph.edges_list:
                 e=my_graph.edges_list[j]
                 draw_g.edge(e.start,e.end, label = str(j))
-
-	# Создает сложный вид графа, сначала передает веса узлов graphviz, а затем веса и длины ребер
+	    draw_g.render(file)
+	# Создает сложный вид графа, сначала передает веса узлов graphviz, а затем веса и длины ребер, отрисовывает полученный граф и сохраняет его в файл
         elif mark == 'simple':
             for i in my_graph.vertices:
                 draw_g.node(i,str(my_graph.vertices[i].coverage))
             for j in my_graph.edges_list:
                 e=my_graph.edges_list[j]
                 draw_g.edge(e.start,e.end, label = 'Coverage: {}, length: {}'.format(my_graph.edges_list[j].coverage,len(my_graph.edges_list[j].seq)))
-
-	# Отрисовывает полученный граф и сохраняет его в файл
-        draw_g.render(file)
+	    draw_g.render(file)        
         else:
             print('Check mark!')
         
